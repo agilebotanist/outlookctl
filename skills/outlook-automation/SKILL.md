@@ -15,15 +15,15 @@ This skill enables email and calendar automation through Classic Outlook on Wind
 
 ## How to Run Commands
 
-Run all commands using this pattern from any directory:
+`outlookctl` is expected on `PATH` (editable install, from any directory):
 
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli <command> [options]
+outlookctl <command> [options]
 ```
 
-For convenience, define this alias at the start of your session:
+If the command is not found, install it once from the project checkout:
 ```bash
-alias outlookctl='uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli'
+uv tool install --editable <path-to-outlookctl-checkout>
 ```
 
 ## Quick Start
@@ -31,7 +31,7 @@ alias outlookctl='uv run --project "C:/Users/GordonMickel/work/outlookctl" pytho
 Before using any commands, verify the environment:
 
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli doctor
+outlookctl doctor
 ```
 
 ## Available Commands
@@ -89,44 +89,44 @@ uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cl
 
 To list recent emails:
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli list --count 10
+outlookctl list --count 10
 ```
 
 To search for specific emails:
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli search --from "sender@example.com" --since 2025-01-01
+outlookctl search --from "sender@example.com" --since 2025-01-01
 ```
 
 To get full message content (only when user asks):
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli get --id "<entry_id>" --store "<store_id>" --include-body
+outlookctl get --id "<entry_id>" --store "<store_id>" --include-body
 ```
 
 ### Creating and Sending Email (Draft-First)
 
 **Step 1: Create a draft**
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli draft --to "recipient@example.com" --subject "Subject" --body-text "Message body"
+outlookctl draft --to "recipient@example.com" --subject "Subject" --body-text "Message body"
 ```
 
 **Step 2: Show user the preview** (subject, recipients, body summary)
 
 **Step 3: Only after user confirms, send the draft**
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli send --draft-id "<entry_id>" --draft-store "<store_id>" --confirm-send YES
+outlookctl send --draft-id "<entry_id>" --draft-store "<store_id>" --confirm-send YES
 ```
 
 ### Replying to Messages
 
 ```bash
 # Create reply draft
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli draft --to "recipient@example.com" --subject "Re: Original" --body-text "Reply text" --reply-to-id "<entry_id>" --reply-to-store "<store_id>"
+outlookctl draft --to "recipient@example.com" --subject "Re: Original" --body-text "Reply text" --reply-to-id "<entry_id>" --reply-to-store "<store_id>"
 ```
 
 ### Saving Attachments
 
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli attachments save --id "<entry_id>" --store "<store_id>" --dest "./attachments"
+outlookctl attachments save --id "<entry_id>" --store "<store_id>" --dest "./attachments"
 ```
 
 ## Calendar Workflows
@@ -135,36 +135,36 @@ uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cl
 
 To list upcoming events (next 7 days by default):
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli calendar list
+outlookctl calendar list
 ```
 
 To list events for a specific date range:
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli calendar list --start "2025-01-20" --days 14
+outlookctl calendar list --start "2025-01-20" --days 14
 ```
 
 To view a shared calendar:
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli calendar list --calendar "colleague@example.com"
+outlookctl calendar list --calendar "colleague@example.com"
 ```
 
 To get full event details:
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli calendar get --id "<entry_id>" --store "<store_id>" --include-body
+outlookctl calendar get --id "<entry_id>" --store "<store_id>" --include-body
 ```
 
 ### Creating Events (Personal Appointments)
 
 For events without attendees (no invitations needed):
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli calendar create --subject "Focus Time" --start "2025-01-20 14:00" --duration 120
+outlookctl calendar create --subject "Focus Time" --start "2025-01-20 14:00" --duration 120
 ```
 
 ### Creating Meetings (Draft-First Workflow)
 
 **Step 1: Create the meeting (saved as draft, no invitations sent)**
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli calendar create \
+outlookctl calendar create \
   --subject "Team Sync" \
   --start "2025-01-20 10:00" \
   --duration 60 \
@@ -177,14 +177,14 @@ uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cl
 
 **Step 3: Only after user confirms, send the invitations**
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli calendar send --id "<entry_id>" --store "<store_id>" --confirm-send YES
+outlookctl calendar send --id "<entry_id>" --store "<store_id>" --confirm-send YES
 ```
 
 ### Creating Meetings with Teams Link
 
 To include a Teams meeting URL in the body:
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli calendar create \
+outlookctl calendar create \
   --subject "Virtual Meeting" \
   --start "2025-01-20 15:00" \
   --duration 30 \
@@ -198,7 +198,7 @@ Note: The Teams URL is embedded in the meeting body. For full Teams integration 
 
 Weekly standup every Monday and Wednesday:
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli calendar create \
+outlookctl calendar create \
   --subject "Daily Standup" \
   --start "2025-01-20 09:00" \
   --duration 15 \
@@ -209,22 +209,22 @@ uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cl
 
 To accept a meeting:
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli calendar respond --id "<entry_id>" --store "<store_id>" --response accept
+outlookctl calendar respond --id "<entry_id>" --store "<store_id>" --response accept
 ```
 
 To decline a meeting:
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli calendar respond --id "<entry_id>" --store "<store_id>" --response decline
+outlookctl calendar respond --id "<entry_id>" --store "<store_id>" --response decline
 ```
 
 To tentatively accept:
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli calendar respond --id "<entry_id>" --store "<store_id>" --response tentative
+outlookctl calendar respond --id "<entry_id>" --store "<store_id>" --response tentative
 ```
 
 To respond without notifying the organizer:
 ```bash
-uv run --project "C:/Users/GordonMickel/work/outlookctl" python -m outlookctl.cli calendar respond --id "<entry_id>" --store "<store_id>" --response accept --no-response
+outlookctl calendar respond --id "<entry_id>" --store "<store_id>" --response accept --no-response
 ```
 
 ## Output Format
@@ -247,7 +247,7 @@ For detailed information, see:
 
 - Windows with Classic Outlook running
 - uv installed and in PATH
-- outlookctl project at: `C:/Users/GordonMickel/work/outlookctl`
+- `outlookctl` installed and on `PATH` (`uv tool install --editable <path-to-outlookctl-checkout>`)
 
 ## Error Handling
 
